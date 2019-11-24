@@ -1,0 +1,63 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 7, 2019, 3:53:23 PM
+    Author     : User
+*/
+body, html {
+    height: 100%;
+}
+.background {
+    background-image:url('../img/bg-login.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%; 
+}
+.hr-sect {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.35);
+    margin: 8px 0px;
+}
+.hr-sect::before,
+.hr-sect::after {
+    content: "";
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.35);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 8px;
+}
+#password {
+    padding-right: 60px;
+}
+.toggle-password {
+    position: relative;
+    float: right;
+    right: 5px;
+    bottom: 35px;
+}
+
+.searchBox input[type="search"] {
+    padding-right: 50px;
+    height: 45px;
+}
+
+.searchBox button {
+    border: none;
+    border-radius: 100%;
+    background-color: light;
+    color: gray;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
