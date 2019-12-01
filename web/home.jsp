@@ -14,7 +14,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>JWP - Peminjaman Buku</title>
+        <title>JWP - Penjualan Buku</title>
         
         <link rel="stylesheet" href="assets/css/bootstrap.css">
         <link rel="stylesheet" href="assets/css/style.css">
@@ -38,7 +38,7 @@
                             </form>
                         </div>
                         <div class="col-md-2 offset-md-1 col-12 pr-0 my-1">
-                            <a class="navbar-brand ml-5" href="daftarpinjam.jsp"><img src="assets/img/shoppingcart.png" width="50px"></a>     
+                            <a class="navbar-brand ml-5" href="daftarbeli.jsp"><img src="assets/img/shoppingcart.png" width="50px"></a>     
                         </div>
                         <div class="col-md-2  col-12 pr-0 my-1">
                             <div class="navbar-brand dropdown ">
@@ -47,9 +47,9 @@
                                     <%= session.getAttribute("nama") %>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#" style="text-decoration: none;">Profil</a>
-                                    <a class="dropdown-item disabled" href="home.jsp" style="text-decoration: none;">Pinjam Buku</a>
-                                    <a class="dropdown-item" href="daftarpinjam.jsp" style="text-decoration: none;">Daftar Pinjam</a>
+                                    <a class="dropdown-item" href="profil.jsp" style="text-decoration: none;">Profil</a>
+                                    <a class="dropdown-item disabled" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
+                                    <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Daftar Beli</a>
                                     <hr>
                                     <a class="dropdown-item" href="index.jsp" style="text-decoration: none;"><strong>Keluar</strong></a>
                                 </div>
@@ -99,17 +99,8 @@
                                                            +" <div class='row'>"
                                                                 +"<div class='col-md-4 offset-md-1'>"
                                                                     +"<img src='assets/img/"+rs.getString(7)+"' width='100%'>"
-                                                                    +"<h5 class='pl-4 ml-3 mt-3'>Pilih Lama Pinjam:</h5>"
-                                                                    +"<div class='pl-4 ml-4'>"
-                                                                        +"<div class='form-check form-check-inline'>"
-                                                                            +"<input class='form-check-input' type='radio' name='inlineRadioOptions"+rs.getString(1)+"' id='inlineRadio1"+rs.getString(1)+"' value='7' checked>"
-                                                                            +"<label class='form-check-label' for='inlineRadio1"+rs.getString(1)+"'>7 Hari</label>"
-                                                                        +"</div>"
-                                                                        +"<div class='form-check form-check-inline'>"
-                                                                            +"<input class='form-check-input' type='radio' name='inlineRadioOptions"+rs.getString(1)+"' id='inlineRadio2"+rs.getString(1)+"' value='30'>"
-                                                                            +"<label class='form-check-label' for='inlineRadio2"+rs.getString(1)+"'>30 Hari</label>"
-                                                                        +"</div>"
-                                                                    +"</div>"
+                                                                    +"<h5 class='text-center mt-3 mb-1'>Harga: Rp"+rs.getString(9)+",00</h5>"
+                                                                    +"<h6 class='text-center'>Stok: "+rs.getString(8)+"</h6>"
                                                                 +"</div>"
                                                                 +"<div class='col-md-6'>"
                                                                     +"<h5>"+rs.getString(2)+"</h5>"
@@ -154,7 +145,13 @@
                                                         +"</div>"
                                                         +"<div class='modal-footer'>"
                                                             +"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>"
-                                                            +"<button type='button' class='btn btn-primary'>Pinjam</button>"
+                                                            +"<form action='prosesbeli.jsp' method='post'>"
+                                                                +"<input type='hidden' name='nim' value='"+ session.getAttribute("nim") +"'>"
+                                                                +"<input type='hidden' name='isbn' value='"+rs.getString(1)+"'>"
+                                                                +"<input type='hidden' name='qty' value='1'>"
+                                                                +"<input type='hidden' name='harga' value='"+rs.getString(9)+"'>"
+                                                                +"<button type='submit' class='btn btn-primary px-4'>Beli</button>"
+                                                            +"</form>"
                                                         +"</div>"
                                                     +"</div>"
                                                 +"</div>"

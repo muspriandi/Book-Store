@@ -4,13 +4,17 @@
     Author     : User
 --%>
 
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="jdbc.koneksi"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>JWP - Peminjaman Buku</title>
+        <title>JWP - Penjualan Buku</title>
         
         <link rel="stylesheet" href="assets/css/bootstrap.css">
         <link rel="stylesheet" href="assets/css/style.css">
@@ -268,60 +272,26 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku1.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku2.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku3.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku4.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku5.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4"><a href="login.jsp">
-                            <img class="d-block" src="assets/img/Buku6.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku7.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku8.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku9.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku10.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku11.jpg" width="100%" height="350px">
-                            </a>
-                        </div>
+                        <%
+                        //GET DATA DARI DATABASE
+                        try {
+                            koneksi connect     = new koneksi();
+                            Connection conn     = connect.bukaKoneksi();
+                            Statement st        = conn.createStatement();
+                            String sqlGetBuku   = "SELECT * FROM books";
+                            ResultSet rs        = st.executeQuery(sqlGetBuku);
+
+                            while(rs.next()) {
+                               out.print("<div class='col-md-3 mb-4'>"
+                                            +"<a href='login.jsp'>"
+                                                + "<img class='d-block' src='assets/img/"+rs.getString(7)+"' width='100%' height='300px'>"
+                                            +"</a>"
+                                        +"</div>");
+                            }
+                        }
+                        catch(Exception e) {
+                        }
+                        %>
                     </div>
                 </div>
             </div>

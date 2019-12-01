@@ -10,7 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>JWP - Peminjaman Buku</title>
+        <title>JWP - Penjualan Buku</title>
         
         <link rel="stylesheet" href="assets/css/bootstrap.css">
         <link rel="stylesheet" href="assets/css/style.css">
@@ -43,9 +43,9 @@
                                     <%= session.getAttribute("nama") %>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#" style="text-decoration: none;">Profil</a>
-                                    <a class="dropdown-item" href="home.jsp" style="text-decoration: none;">Pinjam Buku</a>
-                                    <a class="dropdown-item disabled" href="daftarpinjam.jsp" style="text-decoration: none;">Daftar Pinjam</a>
+                                    <a class="dropdown-item" href="profil.jsp" style="text-decoration: none;">Profil</a>
+                                    <a class="dropdown-item" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
+                                    <a class="dropdown-item disabled" href="daftarbeli.jsp" style="text-decoration: none;">Daftar Beli</a>
                                     <hr>
                                     <a class="dropdown-item" href="index.jsp" style="text-decoration: none;"><strong>Keluar</strong></a>
                                 </div>
@@ -71,26 +71,12 @@
                                 <th width="5%">ISBN</th>
                                 <th width="20%">Judul Buku</th>
                                 <th width="10%">Penerbit</th>
-                                <th width="10%">Lama Pinjam</th>
-                                <th width="10%">Batas Waktu Pengembalian</th>
+                                <th width="10%">Harga</th>
+                                <th width="10%">Qty</th>
+                                <th width="10%">Total</th>
                             </tr>
                         <tbody width="100%" class="w-100">
-                            <tr>
-                                <td>1</td>
-                                <td>9786025907135</td>
-                                <td>Sukses Wawancara: Bagaimana Agar Wawancara Anda Tidak Gagal</td>
-                                <td>Anak Hebat Indonesia</td>
-                                <td>7 Hari</td>
-                                <td>25 Nov 2019</td>
-                            </tr>
-                             <tr>
-                                <td>2</td>
-                                <td>12344567890</td>
-                                <td>Semua Murid Semua Guru 3 : Berpihak Kepada Anak</td>
-                                <td>Test Penerbit</td>
-                                <td>30 Hari</td>
-                                <td>20 Dec 2019</td>
-                            </tr>
+                            <!--FUNGSI-->
                         </tbody>
                     </table>
                     <br>

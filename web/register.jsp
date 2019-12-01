@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JWP - Peminjaman Buku</title>
+        <title>JWP - Penjualan Buku</title>
         <link rel="stylesheet" href="assets/css/bootstrap.css">
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-md-4 offset-md-4 mb-4">
                     <div class="card border-info" style="margin-top: 5%;">
-                        <div class="card-header text-center text-info"><h3>Daftar</h3>Peminjaman Buku</div>
+                        <div class="card-header text-center text-info"><h3>Daftar</h3>Penjualan Buku</div>
                         <div class="card-body text-secondary">
                             <form action="proseslogin.jsp" method="post" name="form1">
                                 <div class="form-group">

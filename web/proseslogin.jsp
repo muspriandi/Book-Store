@@ -13,7 +13,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JWP - Peminjaman Buku</title>
+        <title>JWP - Penjualan Buku</title>
     </head>
     <body>
         <%
