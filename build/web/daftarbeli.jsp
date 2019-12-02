@@ -1,9 +1,14 @@
 <%-- 
-    Document   : daftarpinjam
-    Created on : Nov 22, 2019, 1:41:30 PM
-    Author     : User
+    Document    : daftarpinjam
+    Created on  : Nov 22, 2019, 1:41:30 PM
+    Author      : User
 --%>
 
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="jdbc.koneksi"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -62,7 +67,7 @@
                 <!--DAFTAR BUKU-->
                 <div class="col-md-12 mb-3">
                     <div class="hr-sect">
-                        <h3 class="text-dark">Daftar Buku Yang Dipinjam</h3>
+                        <h3 class="text-dark">Daftar Buku Yang Dibeli</h3>
                     </div>
                     <table class="table table-bordered table-responsive table-striped text-center">
                         <thead width="100%" class="w-100">
@@ -76,13 +81,111 @@
                                 <th width="10%">Total</th>
                             </tr>
                         <tbody width="100%" class="w-100">
-                            <!--FUNGSI-->
+                        <%
+                            String nim      = session.getAttribute("nim").toString();
+
+                            try {
+                                koneksi connect     = new koneksi();
+                                Connection conn     = connect.bukaKoneksi();
+                                Statement st        = conn.createStatement();
+                                String sqlGetData   = "SELECT books.*, shopingcart.* FROM books INNER JOIN shopingcart ON books.isbn = shopingcart.isbn WHERE nim='"+nim+"' GROUP BY shopingcart.isbn";
+                                ResultSet rs        = st.executeQuery(sqlGetData);
+
+                                int i = 1;
+                                while(rs.next()) {
+                                    
+                                    Statement st2        = conn.createStatement();
+                                    String sqlGetTotalQty   = "SELECT SUM(qty) as totalqty FROM shopingcart WHERE nim='"+nim+"' AND isbn='"+rs.getString(1)+"'";
+                                    ResultSet rs2           = st2.executeQuery(sqlGetTotalQty);
+                                    if(rs2.next()) {
+                                        double total   = Double.parseDouble(rs.getString(14)) * Double.parseDouble(rs2.getString(1));
+                                        DecimalFormat dec   = new DecimalFormat("#0.000");
+                                        
+                                        out.print("<tr data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"
+                                                    + "<td>"+i+"</td>"
+                                                    + "<td>"+rs.getString(1)+"</td>"
+                                                    + "<td>"+rs.getString(2)+"</td>"
+                                                    + "<td>"+rs.getString(3)+"</td>"
+                                                    + "<td>"+rs.getString(14)+"</td>"
+                                                    + "<td>"+rs2.getString(1)+"</td>"
+                                                    + "<td class='text-left'><strong>Rp"+dec.format(total)+",00</strong></td>"
+                                                + "</tr>");
+                                        
+                                        out.print(" <div class='modal fade bd-example-modal-lg"+rs.getString(1)+"' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"
+                                                    +"<div class='modal-dialog modal-lg'>"
+                                                        +"<div class='modal-content'>"
+                                                            +"<div class='modal-header'>"
+                                                                +"<h5 class='modal-title' id='exampleModalLabel'>Detail Buku</h5>"
+                                                                +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
+                                                                    +"<span aria-hidden='true'>&times;</span>"
+                                                                +"</button>"
+                                                            +"</div>"
+                                                            +"<div class='modal-body'>"
+                                                                +" <div class='row'>"
+                                                                     +"<div class='col-md-4 offset-md-1 py-4'>"
+                                                                         +"<img src='assets/img/"+rs.getString(7)+"' width='100%'>"
+                                                                     +"</div>"
+                                                                     +"<div class='col-md-6'>"
+                                                                        +"<h5>"+rs.getString(2)+"</h5>"
+                                                                        +"<p>"+rs.getString(3)+"</p>"
+                                                                        +"<hr>"
+                                                                        +"<ul class='nav nav-tabs' role='tablist'>"
+                                                                            +"<li class='nav-item'>"
+                                                                                +"<a class='nav-link text-info active' href='#desc"+rs.getString(1)+"' role='tab' data-toggle='tab'>Deskripsi</a>"
+                                                                            +"</li>"
+                                                                            +"<li class='nav-item'>"
+                                                                                +"<a class='nav-link text-info' href='#detail"+rs.getString(1)+"' role='tab' data-toggle='tab'>Detail</a>"
+                                                                            +"</li>"
+                                                                        +"</ul>"
+                                                                        +"<div class='tab-content'>"
+                                                                            +"<div role='tabpanel' class='tab-pane fade in active show' id='desc"+rs.getString(1)+"' style='max-height: 300px; overflow: hidden;overflow-y: auto;'>"
+                                                                                +"<p class='p-3'>"+rs.getString(4)+"</p>"
+                                                                            +"</div>"
+                                                                            +"<div role='tabpanel' class='tab-pane fade' id='detail"+rs.getString(1)+"'>"
+                                                                                +"<div class='row'>"
+                                                                                    +"<div class='col-md-4 bg-light mt-2 py-2'><label class='text-muted'>Tanggal Terbit</label></div>"
+                                                                                    +"<div class='col-md-8 bg-light mt-2 py-2'> : "+rs.getString(5)+"</div>"
+                                                                                +"</div>"
+                                                                                +"<div class='row'>"
+                                                                                    +"<div class='col-md-4 mt-2 py-1'><label class='text-muted'>ISBN</label></div>"
+                                                                                    +"<div class='col-md-8 mt-2 py-1'> : "+rs.getString(1)+"</div>"
+                                                                                +"</div>"
+                                                                                +"<div class='row'>"
+                                                                                    +"<div class='col-md-4 bg-light mt-2 py-2'><label class='text-muted'>Bahasa</label></div>"
+                                                                                    +"<div class='col-md-8 bg-light mt-2 py-2'> : Indonesia</div>"
+                                                                                +"</div>"
+                                                                                +"<div class='row'>"
+                                                                                    +"<div class='col-md-4 mt-2 py-1'><label class='text-muted'>Penerbit</label></div>"
+                                                                                    +"<div class='col-md-8 mt-2 py-1'> : "+rs.getString(6)+"</div>"
+                                                                                +"</div>"
+                                                                            +"</div>"
+                                                                        +"</div>"
+                                                                    +"</div>"
+                                                                 +"</div>"
+                                                            +"</div>"
+                                                        +"</div>"
+                                                    +"</div>");
+                                        
+                                        i++;
+                                    }
+                                }
+                                
+                                // JIKA DATA KOSONG
+                                if(i == 1) {
+                                    out.print(  "<tr>"
+                                                    + "<td colspan='7' class='py-5'><h4>Data beli buku masih kosong.</h4><a class='text-dark' href='home.jsp'>Beli buku sekarang!</a></td>"
+                                                + "</tr>");
+                                }
+                            }
+                            catch(Exception e) {
+                            }
+                        %>
                         </tbody>
                     </table>
-                    <br>
+<!--                    <br>
                     <div class=" text-center">
-                    <a class="text-primary" href="home.jsp">Kembali</a></div>
-                  </div>
+                        <a class="text-primary" href="home.jsp">Kembali</a></div>
+                    </div>-->
                 </div>
             </div>
         </div>

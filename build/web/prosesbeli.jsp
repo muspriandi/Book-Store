@@ -32,7 +32,7 @@
                     
                     out.print(  "<script>"
                                     + "window.alert('Buku berhasil dimasukkan ke dalam daftar beli.');"
-                                    +"window.location.href='http://localhost:8080/PeminjamanBuku/daftarbeli.jsp';"
+                                    +"window.location.href='http://localhost:8080/PenjualanBuku/daftarbeli.jsp';"
                                 +"</script>");
                     
                     //SELECT STOK
@@ -52,7 +52,7 @@
                 catch(Exception x) {
                     out.print(  "<script>"
                                     +"window.alert('Buku tidak dapat dibeli.');"
-                                    +"window.location.href='http://localhost:8080/PeminjamanBuku/home.jsp';"
+                                    +"window.location.href='http://localhost:8080/PenjualanBuku/home.jsp';"
                                 +"</script>");
                 }
         %>

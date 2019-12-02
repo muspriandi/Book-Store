@@ -111,10 +111,43 @@
                                                     +"</table>"
                                                 +"</div>"
                                                 +"<div class='card-footer'>"
-                                                    +"<button class='btn btn-success w-100 my-1'>Ubah Data Profil</button>"
+                                                    +"<button data-toggle='modal' data-target='.bd-example-modal-md' class='btn btn-success w-100 my-1'>Ubah Data Profil</button>"
                                                 +"</div>"
                                             +"</div>"
                                         +"</div>");
+                                
+                                out.print(" <div class='modal fade bd-example-modal-md' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"
+                                                +"<div class='modal-dialog modal-md'>"
+                                                    +"<div class='modal-content'>"
+                                                        +"<div class='modal-header'>"
+                                                            +"<h5 class='modal-title' id='exampleModalLabel'>Ubah Data Profil</h5>"
+                                                            +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
+                                                                +"<span aria-hidden='true'>&times;</span>"
+                                                            +"</button>"
+                                                        +"</div>"
+                                                        +"<div class='modal-body'>"
+                                                            +"<form>"
+                                                                +"<div class='form-group form-inline'>"
+                                                                    + "<label class='col-md-4'>NIM</label>"
+                                                                    + "<input class='form-control col-md-8' type='text' name='nim' value='"+rs.getString(1)+"' readonly>"
+                                                                + "</div>"
+                                                                +"<div class='form-group form-inline'>"
+                                                                    + "<label class='col-md-4'>Nama</label>"
+                                                                    + "<input class='form-control col-md-8' type='text' name='nama' value='"+rs.getString(2)+"' required>"
+                                                                + "</div>"
+                                                                +"<div class='form-group form-inline'>"
+                                                                    + "<label class='col-md-4'>Password</label>"
+                                                                    + "<input class='form-control col-md-8' type='text' name='password' value='"+rs.getString(3)+"' required>"
+                                                                + "</div>"
+                                                                +"<hr>"
+                                                                +"<div class='form-group form-inline'>"
+                                                                     + "<button class='btn btn-success form-control col-md-8 offset-md-4'>Ubah</button>"
+                                                                + "</div>"
+                                                            + "</form>"
+                                                        +"</div>"
+                                                    +"</div>"
+                                                +"</div>"
+                                            +"</div>");
                                 
                                 out.print("<div class='col-md-3'>"
                                             +"<div class='card'>"
@@ -132,10 +165,10 @@
                 </div>
             </div>
         </div>
-        <br>
+<!--        <br>
         <div class=" text-center">
             <a class="text-primary" href="home.jsp">Kembali</a></div>
-        </div>
+        </div>  -->
         
         <script src="assets/js/jquery.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>

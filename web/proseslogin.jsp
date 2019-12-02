@@ -43,20 +43,20 @@
                             
                             out.print(  "<script>"
                                             + "window.alert('Anda berhasil masuk. Selamat datang "+rs2.getString(2)+"!');"
-                                            +"window.location.href='http://localhost:8080/PeminjamanBuku/home.jsp';"
+                                            +"window.location.href='http://localhost:8080/PenjualanBuku/home.jsp';"
                                         +"</script>");
                         }
                         else {
                             out.print(  "<script>"
                                         + "window.alert('NIM atau Password tidak sesuai.');"
-                                        +"window.location.href='http://localhost:8080/PeminjamanBuku/login.jsp';"
+                                        +"window.location.href='http://localhost:8080/PenjualanBuku/login.jsp';"
                                     +"</script>");
                         }
                     }
                     else {
                         out.print(  "<script>"
                                         + "window.alert('NIM Anda tidak terdaftar.');"
-                                        +"window.location.href='http://localhost:8080/PeminjamanBuku/login.jsp';"
+                                        +"window.location.href='http://localhost:8080/PenjualanBuku/login.jsp';"
                                     +"</script>");
                     }
                 }
@@ -82,13 +82,13 @@
                     conn.close();
                     out.print(  "<script>"
                                     + "window.alert('Data berhasil disimpan. Anda berhasil mendaftar.');"
-                                    +"window.location.href='http://localhost:8080/PeminjamanBuku/login.jsp';"
+                                    +"window.location.href='http://localhost:8080/PenjualanBuku/login.jsp';"
                                 +"</script>");
                 }
                 catch(Exception x) {
                     out.print(  "<script>"
                                     +"window.alert('Data sudah pernah ada dalam database, data gagal disimpan.');"
-                                    +"window.location.href='http://localhost:8080/PeminjamanBuku/register.jsp';"
+                                    +"window.location.href='http://localhost:8080/PenjualanBuku/register.jsp';"
                                 +"</script>");
                 }
             }
