@@ -3,7 +3,12 @@
     Created on : Nov 22, 2019, 9:47:55 AM
     Author     : User
 --%>
-
+<%
+    if(session.getAttribute("nim") == null || session.getAttribute("nama") == null)
+    {
+        response.sendRedirect("http://localhost:8080/PenjualanBuku/index.jsp");
+    }
+%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
@@ -51,7 +56,10 @@
                                     <a class="dropdown-item disabled" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
                                     <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Daftar Beli</a>
                                     <hr>
-                                    <a class="dropdown-item" href="index.jsp" style="text-decoration: none;"><strong>Keluar</strong></a>
+                                    <form action="proseslogin.jsp" method="post">
+                                        <input type="hidden" name="tombol" value="keluar">
+                                        <button type="submit" class="dropdown-item" style="text-decoration: none; cursor: pointer;"><strong>Keluar</strong></button>
+                                    </form>
                                 </div>
                             </div>     
                         </div>
@@ -90,7 +98,7 @@
                                                     +"<div class='modal-dialog modal-lg'>"
                                                         +"<div class='modal-content'>"
                                                             +"<div class='modal-header'>"
-                                                                +"<h5 class='modal-title' id='exampleModalLabel'>Beli Buku</h5>"
+                                                                +"<h5 class='modal-title' id='exampleModalLabel'>Detail Buku</h5>"
                                                                 +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
                                                                     +"<span aria-hidden='true'>&times;</span>"
                                                                 +"</button>"
@@ -144,7 +152,7 @@
                                                                 +"</div>"
                                                             +"</div>"
                                                             +"<div class='modal-footer'>"
-                                                                +"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>"
+                                                                +"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Batal</button>"
                                                                 +"<form action='prosesbeli.jsp' method='post'>"
                                                                     +"<input type='hidden' name='nim' value='"+ session.getAttribute("nim") +"'>"
                                                                     +"<input type='hidden' name='isbn' value='"+rs.getString(1)+"'>"

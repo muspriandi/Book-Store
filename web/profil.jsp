@@ -3,7 +3,12 @@
     Created on : Dec 1, 2019, 10:24:48 PM
     Author     : User
 --%>
-
+<%
+    if(session.getAttribute("nim") == null || session.getAttribute("nama") == null)
+    {
+        response.sendRedirect("http://localhost:8080/PenjualanBuku/index.jsp");
+    }
+%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
@@ -51,7 +56,10 @@
                                     <a class="dropdown-item" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
                                     <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Daftar Beli</a>
                                     <hr>
-                                    <a class="dropdown-item" href="index.jsp" style="text-decoration: none;"><strong>Keluar</strong></a>
+                                    <form action="proseslogin.jsp" method="post">
+                                        <input type="hidden" name="tombol" value="keluar">
+                                        <button type="submit" class="dropdown-item" style="text-decoration: none; cursor: pointer;"><strong>Keluar</strong></button>
+                                    </form>
                                 </div>
                             </div>     
                         </div>

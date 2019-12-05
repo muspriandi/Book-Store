@@ -33,8 +33,8 @@
                     </div>
                     <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
                         <div class="col-md-6 col-12 pr-0 my-1">
-                            <form class="searchBox" action="#">
-                                <input type="search" class="form-control w-100" placeholder="Cari sesuatu di sini">
+                            <form class="searchBox" action="caribuku.jsp" method="get">
+                                <input type="search" name="keyword" class="form-control w-100" placeholder="Cari sesuatu di sini">
                                 <button type="submit"><img src="assets/img/search.png" width="15px" style="padding-bottom: 5px;"></button>
                             </form>
                         </div>
@@ -100,66 +100,88 @@
                         <h2 class="text-dark">Rekomendasi Buku</h2>
                     </div>
                 </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <div class="card">
-                        <div class="card-img">
-                            <a href="login.jsp">
-                                <img class="d-block rounded-top" src="assets/img/Buku8.jpg" width="100%" height="230px">
-                            </a>
-                        </div>
-<!--                        <div class="card-body">
-                            <h5>Test Image</h5>
-                        </div>-->
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <div class="card">
-                        <div class="card-img">
-                            <a href="login.jsp">
-                                <img class="d-block rounded-top" src="assets/img/Buku9.jpg" width="100%" height="230px">
-                            </a>
-                        </div>
-<!--                        <div class="card-body">
-                            <h5>Test Image</h5>
-                        </div>-->
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <div class="card">
-                        <div class="card-img">
-                            <a href="login.jsp">
-                                <img class="d-block rounded-top" src="assets/img/Buku10.jpg" width="100%" height="230px">
-                            </a>
-                        </div>
-<!--                        <div class="card-body">
-                            <h5>Test Image</h5>
-                        </div>-->
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <div class="card">
-                        <div class="card-img">
-                            <a href="login.jsp">
-                                <img class="d-block rounded-top" src="assets/img/Buku11.jpg" width="100%" height="230px">
-                            </a>
-                        </div>
-<!--                        <div class="card-body">
-                            <h5>Test Image</h5>
-                        </div>-->
-                    </div>
-                </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <div class="card">
-                        <div class="card-img">
-                            <a href="login.jsp">
-                                <img class="d-block rounded-top" src="assets/img/Buku1.jpg" width="100%" height="230px">
-                            </a>
-                        </div>
-<!--                        <div class="card-body">
-                            <h5>Test Image</h5>
-                        </div>-->
-                    </div>
-                </div>
+                <%
+                    //GET DATA DARI DATABASE
+                    try {
+                        koneksi connect     = new koneksi();
+                        Connection conn     = connect.bukaKoneksi();
+                        Statement st        = conn.createStatement();
+                        String sqlGetBuku   = "SELECT * FROM books WHERE stok > 0 ORDER BY ISBN ASC LIMIT 0,5";
+                        ResultSet rs        = st.executeQuery(sqlGetBuku);
+
+                        while(rs.next()) {
+                            out.print(" <div class='col-md-2 col-6 mb-2' data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"
+                                            + "<img class='d-block rounded' src='assets/img/"+rs.getString(7)+"' width='100%' height='225px'>"
+                                        +"</div>");
+                            out.print(" <div class='modal fade bd-example-modal-lg"+rs.getString(1)+"' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"
+                                            +"<div class='modal-dialog modal-lg'>"
+                                                +"<div class='modal-content'>"
+                                                    +"<div class='modal-header'>"
+                                                        +"<h5 class='modal-title' id='exampleModalLabel'>Detail Buku</h5>"
+                                                        +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
+                                                            +"<span aria-hidden='true'>&times;</span>"
+                                                        +"</button>"
+                                                    +"</div>"
+                                                    +"<div class='modal-body'>"
+                                                        +" <div class='row'>"
+                                                            +"<div class='col-md-4 offset-md-1'>"
+                                                                +"<img src='assets/img/"+rs.getString(7)+"' width='100%'>"
+                                                                +"<h5 class='text-center mt-3 mb-1'>Harga: Rp"+rs.getString(9)+",00</h5>"
+                                                                +"<h6 class='text-center'>Stok: "+rs.getString(8)+" (<label class='text-success'>Tersedia</label>)</h6>"
+                                                            +"</div>"
+                                                            +"<div class='col-md-6'>"
+                                                                +"<h5>"+rs.getString(2)+"</h5>"
+                                                                +"<p>"+rs.getString(3)+"</p>"
+                                                                +"<hr>"
+                                                                +"<ul class='nav nav-tabs' role='tablist'>"
+                                                                    +"<li class='nav-item'>"
+                                                                        +"<a class='nav-link text-info active' href='#desc"+rs.getString(1)+"' role='tab' data-toggle='tab'>Deskripsi</a>"
+                                                                    +"</li>"
+                                                                    +"<li class='nav-item'>"
+                                                                        +"<a class='nav-link text-info' href='#detail"+rs.getString(1)+"' role='tab' data-toggle='tab'>Detail</a>"
+                                                                    +"</li>"
+                                                                +"</ul>"
+                                                                +"<div class='tab-content'>"
+                                                                    +"<div role='tabpanel' class='tab-pane fade in active show' id='desc"+rs.getString(1)+"' style='max-height: 300px; overflow: hidden;overflow-y: auto;'>"
+                                                                        +"<p class='p-3'>"+rs.getString(4)+"</p>"
+                                                                    +"</div>"
+                                                                    +"<div role='tabpanel' class='tab-pane fade' id='detail"+rs.getString(1)+"'>"
+                                                                        +"<table class='table table-responsive table-striped'>"
+                                                                            +"<br>"
+                                                                                +"<tr>"
+                                                                                    +"<td width='130px' class='text-muted'>Tanggal Terbit</td>"
+                                                                                    +"<td width='240px'> : "+rs.getString(5)+"</td>"
+                                                                               +"</tr>"
+                                                                               +"<tr>"
+                                                                                    +"<td width='130px' class='text-muted'>ISBN</td>"
+                                                                                   +"<td width='240px'> : "+rs.getString(1)+"</td>"
+                                                                                +"</tr>"
+                                                                                +"<tr>"
+                                                                                    +"<td width='130px' class='text-muted'>Bahasa</td>"
+                                                                                    +"<td width='240px'> : Indonesia</td>"
+                                                                                +"</tr>"
+                                                                                +"<tr>"
+                                                                                   +"<td width='130px' class='text-muted'>Penerbit</td>"
+                                                                                   +"<td width='240px'>: "+rs.getString(6)+"</td>"
+                                                                                +"</tr>"
+                                                                            +"</table>"
+                                                                        +"</div>"
+                                                                    +"</div>"
+                                                                +"</div>"
+                                                            +"</div>"
+                                                        +"</div>"
+                                                        +"<div class='modal-footer'>"
+                                                            +"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Batal</button>"
+                                                            +"<a href='login.jsp' class='btn btn-primary px-4'>Masuk</a>"
+                                                        +"</div>"
+                                                    +"</div>"
+                                                +"</div>"
+                                            +"</div>");
+                        }
+                    }
+                    catch(Exception e) {
+                    }
+                %>
             </div>
             
             <br>
@@ -168,40 +190,92 @@
                 <!--BUKU POPULER-->
                 <div class="col-md-6 mb-3">
                     <div class="hr-sect">
-                        <h3 class="text-dark">Buku Teropuler</h3>
+                        <h3 class="text-dark">Buku Terbaru</h3>
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-4 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku3.jpg" width="100%">
-                            </a>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku4.jpg" width="100%">
-                            </a>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku5.jpg" width="100%">
-                            </a>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku6.jpg" width="100%">
-                            </a>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku7.jpg" width="100%">
-                            </a>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <a href="login.jsp">
-                                <img class="d-block" src="assets/img/Buku11.jpg" width="100%">
-                            </a>
-                        </div>
+                        <%
+                            //GET DATA DARI DATABASE
+                            try {
+                                koneksi connect     = new koneksi();
+                                Connection conn     = connect.bukaKoneksi();
+                                Statement st        = conn.createStatement();
+                                String sqlGetBuku   = "SELECT * FROM books WHERE stok > 0 ORDER BY tanggal_terbit DESC LIMIT 0,6";
+                                ResultSet rs        = st.executeQuery(sqlGetBuku);
+
+                                while(rs.next()) {
+                                    out.print(" <div class='col-md-4 mb-4' data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"
+                                                    + "<img class='d-block rounded' src='assets/img/"+rs.getString(7)+"' width='100%' height='225px'>"
+                                                +"</div>");
+                                    out.print(" <div class='modal fade bd-example-modal-lg"+rs.getString(1)+"' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"
+                                                    +"<div class='modal-dialog modal-lg'>"
+                                                        +"<div class='modal-content'>"
+                                                            +"<div class='modal-header'>"
+                                                                +"<h5 class='modal-title' id='exampleModalLabel'>Detail Buku</h5>"
+                                                                +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
+                                                                    +"<span aria-hidden='true'>&times;</span>"
+                                                                +"</button>"
+                                                            +"</div>"
+                                                            +"<div class='modal-body'>"
+                                                                +" <div class='row'>"
+                                                                    +"<div class='col-md-4 offset-md-1'>"
+                                                                        +"<img src='assets/img/"+rs.getString(7)+"' width='100%'>"
+                                                                        +"<h5 class='text-center mt-3 mb-1'>Harga: Rp"+rs.getString(9)+",00</h5>"
+                                                                        +"<h6 class='text-center'>Stok: "+rs.getString(8)+" (<label class='text-success'>Tersedia</label>)</h6>"
+                                                                    +"</div>"
+                                                                    +"<div class='col-md-6 text-left'>"
+                                                                        +"<h5>"+rs.getString(2)+"</h5>"
+                                                                        +"<p>"+rs.getString(3)+"</p>"
+                                                                        +"<hr>"
+                                                                        +"<ul class='nav nav-tabs' role='tablist'>"
+                                                                            +"<li class='nav-item'>"
+                                                                                +"<a class='nav-link text-info active' href='#desc"+rs.getString(1)+"' role='tab' data-toggle='tab'>Deskripsi</a>"
+                                                                            +"</li>"
+                                                                            +"<li class='nav-item'>"
+                                                                                +"<a class='nav-link text-info' href='#detail"+rs.getString(1)+"' role='tab' data-toggle='tab'>Detail</a>"
+                                                                            +"</li>"
+                                                                        +"</ul>"
+                                                                        +"<div class='tab-content'>"
+                                                                            +"<div role='tabpanel' class='tab-pane fade in active show' id='desc"+rs.getString(1)+"' style='max-height: 300px; overflow: hidden;overflow-y: auto;'>"
+                                                                                +"<p class='p-3'>"+rs.getString(4)+"</p>"
+                                                                            +"</div>"
+                                                                            +"<div role='tabpanel' class='tab-pane fade' id='detail"+rs.getString(1)+"'>"
+                                                                                +"<table class='table table-responsive table-striped'>"
+                                                                                    +"<br>"
+                                                                                        +"<tr>"
+                                                                                            +"<td width='130px' class='text-muted'>Tanggal Terbit</td>"
+                                                                                            +"<td width='240px'> : "+rs.getString(5)+"</td>"
+                                                                                       +"</tr>"
+                                                                                       +"<tr>"
+                                                                                            +"<td width='130px' class='text-muted'>ISBN</td>"
+                                                                                           +"<td width='240px'> : "+rs.getString(1)+"</td>"
+                                                                                        +"</tr>"
+                                                                                        +"<tr>"
+                                                                                            +"<td width='130px' class='text-muted'>Bahasa</td>"
+                                                                                            +"<td width='240px'> : Indonesia</td>"
+                                                                                        +"</tr>"
+                                                                                        +"<tr>"
+                                                                                           +"<td width='130px' class='text-muted'>Penerbit</td>"
+                                                                                           +"<td width='240px'>: "+rs.getString(6)+"</td>"
+                                                                                        +"</tr>"
+                                                                                    +"</table>"
+                                                                                +"</div>"
+                                                                            +"</div>"
+                                                                        +"</div>"
+                                                                    +"</div>"
+                                                                +"</div>"
+                                                                +"<div class='modal-footer'>"
+                                                                    +"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Batal</button>"
+                                                                    +"<a href='login.jsp' class='btn btn-primary px-4'>Masuk</a>"
+                                                                +"</div>"
+                                                            +"</div>"
+                                                        +"</div>"
+                                                    +"</div>");
+                                }
+                            }
+                            catch(Exception e) {
+                            }
+                        %>
                     </div>
                 </div>
                 
@@ -282,11 +356,138 @@
                             ResultSet rs        = st.executeQuery(sqlGetBuku);
 
                             while(rs.next()) {
-                               out.print("<div class='col-md-3 mb-4'>"
-                                            +"<a href='login.jsp'>"
-                                                + "<img class='d-block' src='assets/img/"+rs.getString(7)+"' width='100%' height='300px'>"
-                                            +"</a>"
+                                out.print("<div class='col-md-2 mb-4' data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"
+                                            + "<img class='d-block rounded' src='assets/img/"+rs.getString(7)+"' width='100%' height='225px'>"
                                         +"</div>");
+                                if(Integer.parseInt(rs.getString(8)) > 0) {
+                                    out.print("<div class='modal fade bd-example-modal-lg"+rs.getString(1)+"' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"    +"<div class='modal-dialog modal-lg'>"
+                                                +"<div class='modal-content'>"
+                                                    +"<div class='modal-header'>"
+                                                        +"<h5 class='modal-title' id='exampleModalLabel'>Detail Buku</h5>"
+                                                        +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
+                                                            +"<span aria-hidden='true'>&times;</span>"
+                                                        +"</button>"
+                                                    +"</div>"
+                                                    +"<div class='modal-body'>"
+                                                        +" <div class='row'>"
+                                                            +"<div class='col-md-4 offset-md-1'>"
+                                                                +"<img src='assets/img/"+rs.getString(7)+"' width='100%'>"
+                                                                +"<h5 class='text-center mt-3 mb-1'>Harga: Rp"+rs.getString(9)+",00</h5>"
+                                                                +"<h6 class='text-center'>Stok: "+rs.getString(8)+" (<label class='text-success'>Tersedia</label>)</h6>"
+                                                            +"</div>"
+                                                            +"<div class='col-md-6 text-left'>"
+                                                                +"<h5>"+rs.getString(2)+"</h5>"
+                                                                +"<p>"+rs.getString(3)+"</p>"
+                                                                +"<hr>"
+                                                                +"<ul class='nav nav-tabs' role='tablist'>"
+                                                                    +"<li class='nav-item'>"
+                                                                        +"<a class='nav-link text-info active' href='#desc"+rs.getString(1)+"' role='tab' data-toggle='tab'>Deskripsi</a>"
+                                                                    +"</li>"
+                                                                    +"<li class='nav-item'>"
+                                                                        +"<a class='nav-link text-info' href='#detail"+rs.getString(1)+"' role='tab' data-toggle='tab'>Detail</a>"
+                                                                    +"</li>"
+                                                                +"</ul>"
+                                                                +"<div class='tab-content'>"
+                                                                    +"<div role='tabpanel' class='tab-pane fade in active show' id='desc"+rs.getString(1)+"' style='max-height: 300px; overflow: hidden;overflow-y: auto;'>"
+                                                                        +"<p class='p-3'>"+rs.getString(4)+"</p>"
+                                                                    +"</div>"
+                                                                    +"<div role='tabpanel' class='tab-pane fade' id='detail"+rs.getString(1)+"'>"
+                                                                        +"<table class='table table-responsive table-striped'>"
+                                                                            +"<br>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>Tanggal Terbit</td>"
+                                                                                +"<td width='240px'> : "+rs.getString(5)+"</td>"
+                                                                            +"</tr>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>ISBN</td>"
+                                                                                +"<td width='240px'> : "+rs.getString(1)+"</td>"
+                                                                            +"</tr>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>Bahasa</td>"
+                                                                                +"<td width='240px'> : Indonesia</td>"
+                                                                            +"</tr>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>Penerbit</td>"
+                                                                                +"<td width='240px'>: "+rs.getString(6)+"</td>"
+                                                                            +"</tr>"
+                                                                        +"</table>"
+                                                                    +"</div>"
+                                                                +"</div>"
+                                                             +"</div>"
+                                                        +"</div>"
+                                                    +"</div>"
+                                                    +"<div class='modal-footer'>"
+                                                        +"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Batal</button>"
+                                                        +"<a href='login.jsp' class='btn btn-primary px-4'>Masuk</a>"
+                                                    +"</div>"
+                                                +"</div>"
+                                            +"</div>"
+                                    +"</div>");
+                                }
+                                else {
+                                    out.print("<div class='modal fade bd-example-modal-lg"+rs.getString(1)+"' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"    +"<div class='modal-dialog modal-lg'>"
+                                                +"<div class='modal-content'>"
+                                                    +"<div class='modal-header'>"
+                                                        +"<h5 class='modal-title' id='exampleModalLabel'>Detail Buku</h5>"
+                                                        +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
+                                                            +"<span aria-hidden='true'>&times;</span>"
+                                                        +"</button>"
+                                                    +"</div>"
+                                                    +"<div class='modal-body'>"
+                                                        +" <div class='row'>"
+                                                            +"<div class='col-md-4 offset-md-1'>"
+                                                                +"<img src='assets/img/"+rs.getString(7)+"' width='100%'>"
+                                                                +"<h5 class='text-center mt-3 mb-1'>Harga: Rp"+rs.getString(9)+",00</h5>"
+                                                                +"<h6 class='text-center'>Stok: "+rs.getString(8)+" (<label class='text-danger'>Stok Habis</label>)</h6>"
+                                                            +"</div>"
+                                                            +"<div class='col-md-6 text-left'>"
+                                                                +"<h5>"+rs.getString(2)+"</h5>"
+                                                                +"<p>"+rs.getString(3)+"</p>"
+                                                                +"<hr>"
+                                                                +"<ul class='nav nav-tabs' role='tablist'>"
+                                                                    +"<li class='nav-item'>"
+                                                                        +"<a class='nav-link text-info active' href='#desc"+rs.getString(1)+"' role='tab' data-toggle='tab'>Deskripsi</a>"
+                                                                    +"</li>"
+                                                                    +"<li class='nav-item'>"
+                                                                        +"<a class='nav-link text-info' href='#detail"+rs.getString(1)+"' role='tab' data-toggle='tab'>Detail</a>"
+                                                                    +"</li>"
+                                                                +"</ul>"
+                                                                +"<div class='tab-content'>"
+                                                                    +"<div role='tabpanel' class='tab-pane fade in active show' id='desc"+rs.getString(1)+"' style='max-height: 300px; overflow: hidden;overflow-y: auto;'>"
+                                                                        +"<p class='p-3'>"+rs.getString(4)+"</p>"
+                                                                    +"</div>"
+                                                                    +"<div role='tabpanel' class='tab-pane fade' id='detail"+rs.getString(1)+"'>"
+                                                                        +"<table class='table table-responsive table-striped'>"
+                                                                            +"<br>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>Tanggal Terbit</td>"
+                                                                                +"<td width='240px'> : "+rs.getString(5)+"</td>"
+                                                                            +"</tr>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>ISBN</td>"
+                                                                                +"<td width='240px'> : "+rs.getString(1)+"</td>"
+                                                                            +"</tr>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>Bahasa</td>"
+                                                                                +"<td width='240px'> : Indonesia</td>"
+                                                                            +"</tr>"
+                                                                            +"<tr>"
+                                                                                +"<td width='130px' class='text-muted'>Penerbit</td>"
+                                                                                +"<td width='240px'>: "+rs.getString(6)+"</td>"
+                                                                            +"</tr>"
+                                                                        +"</table>"
+                                                                    +"</div>"
+                                                                +"</div>"
+                                                             +"</div>"
+                                                        +"</div>"
+                                                    +"</div>"
+                                                    +"<div class='modal-footer'>"
+                                                        +"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Batal</button>"
+                                                    +"</div>"
+                                                +"</div>"
+                                            +"</div>"
+                                    +"</div>");
+                                }
                             }
                         }
                         catch(Exception e) {
