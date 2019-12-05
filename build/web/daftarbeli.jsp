@@ -34,12 +34,12 @@
                         <a class="navbar-brand" href="home.jsp">
                         <img src="assets/img/logo.png" alt="logo" width="50px"> <strong>Perpustakaan Daring</strong></a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
                     </div>
                     <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
                         <div class="col-md-6 col-12 pr-0 my-1">
-                            <form class="searchBox" action="#">
-                                <input type="search" class="form-control w-100" placeholder="Cari sesuatu di sini">
+                            <form class="searchBox" action="caribuku.jsp" method="get">
+                                <input type="search" name="keyword" class="form-control w-100" placeholder="Cari sesuatu di sini">
                                 <button type="submit"><img src="assets/img/search.png" width="15px" style="padding-bottom: 5px;"></button>
                             </form>
                         </div>
@@ -55,7 +55,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="profil.jsp" style="text-decoration: none;">Profil</a>
                                     <a class="dropdown-item" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
-                                    <a class="dropdown-item disabled" href="daftarbeli.jsp" style="text-decoration: none;">Daftar Beli</a>
+                                    <a class="dropdown-item disabled" href="daftarbeli.jsp" style="text-decoration: none;">Keranjang</a>
                                     <hr>
                                     <form action="proseslogin.jsp" method="post">
                                         <input type="hidden" name="tombol" value="keluar">
@@ -75,10 +75,36 @@
                 <!--DAFTAR BUKU-->
                 <div class="col-md-12 mb-3">
                     <div class="hr-sect">
-                        <h3 class="text-dark">Daftar Buku Yang Dibeli</h3>
+                        <span>
+                            <h3 class="text-dark m-0 px-3 text-center">Keranjang Belanja</h3>
+                            <%
+                                //HITUNG JUMLAH DATA DI KERANJANG
+                                try {
+                                    koneksi connect     = new koneksi();
+                                    Connection conn     = connect.bukaKoneksi();
+                                    Statement st        = conn.createStatement();
+                                    String sqlHitungBuku= "SELECT count(id) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
+                                    ResultSet rs        = st.executeQuery(sqlHitungBuku);
+
+                                    int flag = 0;
+                                    if(rs.next()) {
+                                        flag = 1;
+                                        out.print("<h5 class='text-center'>Total buku dalam keranjang : "+rs.getString(1)+"</h5>");
+                                    }
+                                    
+                                    // JIKA DATA KOSONG
+                                    if(flag == 0) {
+                                        out.print("<h5 class='text-center'>Total buku dalam keranjang : 0</h5>");
+                                    }
+                                }
+                                catch(Exception e) {
+                                    
+                                }
+                            %>
+                        </span>
                     </div>
-                    <table class="table table-bordered table-responsive table-striped text-center">
-                        <thead width="100%" class="w-100">
+                    <table class="table table-bordered table-responsive table-hover text-center mb-5">
+                        <thead class="bg-primary text-white" width="100%" class="w-100">
                             <tr>
                                 <th width="2%">No</th>
                                 <th width="5%">ISBN</th>
@@ -96,18 +122,22 @@
                                 koneksi connect     = new koneksi();
                                 Connection conn     = connect.bukaKoneksi();
                                 Statement st        = conn.createStatement();
-                                String sqlGetData   = "SELECT books.*, shopingcart.* FROM books INNER JOIN shopingcart ON books.isbn = shopingcart.isbn WHERE nim='"+nim+"' GROUP BY shopingcart.isbn";
+                                String sqlGetData   = "SELECT books.*, shopingcart.* FROM books INNER JOIN shopingcart ON books.isbn = shopingcart.isbn WHERE nim='"+nim+"' AND status='belum lunas' GROUP BY shopingcart.isbn";
                                 ResultSet rs        = st.executeQuery(sqlGetData);
 
                                 int i = 1;
+                                double total = 0;
+                                double grandTotal = 0;
+                                DecimalFormat dec   = new DecimalFormat("#0.000");
+                                
                                 while(rs.next()) {
                                     
                                     Statement st2        = conn.createStatement();
-                                    String sqlGetTotalQty   = "SELECT SUM(qty) as totalqty FROM shopingcart WHERE nim='"+nim+"' AND isbn='"+rs.getString(1)+"'";
+                                    String sqlGetTotalQty   = "SELECT SUM(qty) as totalqty FROM shopingcart WHERE nim='"+nim+"' AND isbn='"+rs.getString(1)+"' AND status='belum lunas'";
                                     ResultSet rs2           = st2.executeQuery(sqlGetTotalQty);
                                     if(rs2.next()) {
-                                        double total   = Double.parseDouble(rs.getString(14)) * Double.parseDouble(rs2.getString(1));
-                                        DecimalFormat dec   = new DecimalFormat("#0.000");
+                                        total       = Double.parseDouble(rs.getString(14)) * Double.parseDouble(rs2.getString(1));
+                                        grandTotal  = grandTotal + total;
                                         
                                         out.print("<tr data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"
                                                     + "<td>"+i+"</td>"
@@ -181,8 +211,78 @@
                                 // JIKA DATA KOSONG
                                 if(i == 1) {
                                     out.print(  "<tr>"
-                                                    + "<td colspan='7' class='py-5'><h4>Data beli buku masih kosong.</h4><a class='text-dark' href='home.jsp'>Beli buku sekarang!</a></td>"
+                                                    + "<td colspan='7' class='py-5'><h4>Keranjang masih kosong.</h4><a class='text-dark' href='home.jsp'>Beli buku sekarang!</a></td>"
                                                 + "</tr>");
+                                }
+                                else {
+                                    out.print("<tr style='background-color: rgba(0, 0, 0, 0.1);'>"
+                                                + "<td colspan='6' class='text-right'><strong>Total yang harus dibayar</strong></td>"
+                                                + "<td class='text-left'>"
+                                                    + "<strong>Rp"+dec.format(grandTotal)+",00</strong>"
+                                                    + "<button class='btn btn-success w-100 mt-2' data-toggle='modal' data-target='.bd-example-modal-lg"+nim+"'>Bayar"
+                                                + "</td>"
+                                            + "</tr>");
+                                    
+                                    try {
+                                        String sqlGetProfile    = "SELECT alamat FROM users WHERE nim='"+nim+"'";
+                                        ResultSet rs3           = st.executeQuery(sqlGetProfile);
+                                        
+                                        if(rs3.next())
+                                        {
+                                            out.print(" <div class='modal fade bd-example-modal-lg"+nim+"' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"
+                                                            +"<div class='modal-dialog modal-lg'>"
+                                                                +"<div class='modal-content'>"
+                                                                    +"<div class='modal-header'>"
+                                                                        +"<h5 class='modal-title' id='exampleModalLabel'>Bayar Keranjang</h5>"
+                                                                        +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
+                                                                            +"<span aria-hidden='true'>&times;</span>"
+                                                                        +"</button>"
+                                                                    +"</div>"
+                                                                    +"<div class='modal-body'>"
+                                                                        + "<div class='row mx-5'>"
+                                                                            + "<form>"
+                                                                                + "<div class='col-md-12'>"
+                                                                                    + "<div class='form-group'>"
+                                                                                        + "<label>Total Belanja : </label>"
+                                                                                        + "<strong> Rp"+dec.format(grandTotal)+",00</strong>"
+                                                                                    + "</div>"
+                                                                                    + "<div class='form-group'>"
+                                                                                        + "<label>Alamat Pengiriman :</label>"
+                                                                                        + "<textarea name='alamat' class='form-control'>"+rs3.getString(1)+"</textarea>"
+                                                                                    + "</div>"
+                                                                                    + "<div class='form-group'>"
+                                                                                        + "<label>Pilih Kurir Pengiriman :</label><br>"
+                                                                                        + "<input type='radio' name='kurir' value='jne' id='jne' class='m-2'>"
+                                                                                        + "<label for='jne' class='mr-5'><img src='assets/img/jne.png' width='80px;'></label>"
+                                                                                        + "<input type='radio' name='kurir' value='tiki' id='tiki' class='m-2'>"
+                                                                                        + "<label for='tiki' class='mr-5'><img src='assets/img/tiki.png' width='80px;'></label>"
+                                                                                        + "<input type='radio' name='kurir' value='sicepat' id='sicepat' class='m-2'>"
+                                                                                        + "<label for='sicepat' class='mr-5'><img src='assets/img/sicepat.png' width='80px;'></label>"
+                                                                                        + "<input type='radio' name='kurir' value='pos' id='pos' class='m-2'>"
+                                                                                        + "<label for='pos'><img src='assets/img/pos.png' width='80px;'></label>"
+                                                                                    + "</div>"
+                                                                                    + "<div class='form-group'>"
+                                                                                        + "<label>Pilih Metode Pembayaran :</label>"
+                                                                                        + "<select class='form-control' name='pembayaran'>"
+                                                                                            + "<option value='T-Mandiri'>Transfer - Mandiri</option>"
+                                                                                            + "<option value='T-BRI'>Transfer - BRI</option>"
+                                                                                            + "<option value='T-BNI'>Transfer - BNI</option>"
+                                                                                            + "<option value='G-Alfamart'>Gerai - Alfamart</option>"
+                                                                                            + "<option value='G-Indomart'>Gerai - Indomart</option>"
+                                                                                        + "</select>"
+                                                                                    + "</div>"
+                                                                                    + "<button class='btn btn-outline-success w-100 my-4'>Bayar Sekarang!</button"
+                                                                                + "</div>"
+                                                                            + "</form>"
+                                                                        + "</div>"
+                                                                    +"</div>"
+                                                                +"</div>"
+                                                            +"</div>");      
+                                        }
+                                    }
+                                    catch(Exception e) {
+                                        
+                                    }
                                 }
                             }
                             catch(Exception e) {

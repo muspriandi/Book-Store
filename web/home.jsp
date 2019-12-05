@@ -37,13 +37,37 @@
                     </div>
                     <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
                         <div class="col-md-6 col-12 pr-0 my-1">
-                            <form class="searchBox" action="#">
-                                <input type="search" class="form-control w-100" placeholder="Cari sesuatu di sini">
+                            <form class="searchBox" action="caribuku.jsp" method="get">
+                                <input type="search" name="keyword" class="form-control w-100" placeholder="Cari sesuatu di sini">
                                 <button type="submit"><img src="assets/img/search.png" width="15px" style="padding-bottom: 5px;"></button>
                             </form>
                         </div>
                         <div class="col-md-2 offset-md-1 col-12 pr-0 my-1">
                             <a class="navbar-brand ml-5" href="daftarbeli.jsp"><img src="assets/img/shoppingcart.png" width="50px"></a>     
+                            <%
+                                //HITUNG JUMLAH DATA DI KERANJANG
+                                try {
+                                    koneksi connect     = new koneksi();
+                                    Connection conn     = connect.bukaKoneksi();
+                                    Statement st        = conn.createStatement();
+                                    String sqlHitungBuku= "SELECT count(id) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
+                                    ResultSet rs        = st.executeQuery(sqlHitungBuku);
+
+                                    int flag = 0;
+                                    if(rs.next()) {
+                                        flag = 1;
+                                        out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>"+rs.getString(1)+"</span></div>");
+                                    }
+                                    
+                                    // JIKA DATA KOSONG
+                                    if(flag == 0) {
+                                        out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>0</span></div>");
+                                    }
+                                }
+                                catch(Exception e) {
+                                    
+                                }
+                            %>
                         </div>
                         <div class="col-md-2  col-12 pr-0 my-1">
                             <div class="navbar-brand dropdown ">
@@ -54,7 +78,7 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="profil.jsp" style="text-decoration: none;">Profil</a>
                                     <a class="dropdown-item disabled" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
-                                    <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Daftar Beli</a>
+                                    <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Keranjang</a>
                                     <hr>
                                     <form action="proseslogin.jsp" method="post">
                                         <input type="hidden" name="tombol" value="keluar">
@@ -158,7 +182,7 @@
                                                                     +"<input type='hidden' name='isbn' value='"+rs.getString(1)+"'>"
                                                                     +"<input type='hidden' name='qty' value='1'>"
                                                                     +"<input type='hidden' name='harga' value='"+rs.getString(9)+"'>"
-                                                                    +"<button type='submit' class='btn btn-primary px-4'>Beli</button>"
+                                                                    +"<button type='submit' class='btn btn-primary px-4'><strong>+</strong> Keranjang</button>"
                                                                 +"</form>"
                                                             +"</div>"
                                                         +"</div>"
@@ -170,7 +194,7 @@
                                                     +"<div class='modal-dialog modal-lg'>"
                                                         +"<div class='modal-content'>"
                                                             +"<div class='modal-header'>"
-                                                                +"<h5 class='modal-title' id='exampleModalLabel'>Beli Buku</h5>"
+                                                                +"<h5 class='modal-title' id='exampleModalLabel'>Detail Buku</h5>"
                                                                 +"<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"
                                                                     +"<span aria-hidden='true'>&times;</span>"
                                                                 +"</button>"

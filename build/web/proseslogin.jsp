@@ -96,6 +96,8 @@
             //  FUNGSI CEK, APAKAH DATA YANG DIPROSES BERUPA DATA LOGOUT ATAU BUKAN
             if(cek.toString().equals("keluar")) 
             {
+                session.removeAttribute("nim");
+                session.removeAttribute("nama");
                 session.invalidate();
                 response.sendRedirect("http://localhost:8080/PenjualanBuku/index.jsp");
             }

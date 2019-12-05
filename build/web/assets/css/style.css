@@ -61,3 +61,14 @@ body, html {
     right: 5px;
     top: 5px;
 }
+
+.jumlahKeranjang {
+    font-size: 15px;
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    position: absolute;
+    top: 30px;
+    right: 10px;
+}

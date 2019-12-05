@@ -97,7 +97,7 @@
             <div class="row mx-3 mb-3 justify-content-center">
                 <div class="col-md-12">
                     <div class="hr-sect">
-                        <h2 class="text-dark">Rekomendasi Buku</h2>
+                        <h3 class="text-dark">Rekomendasi Buku</h3>
                     </div>
                 </div>
                 <%

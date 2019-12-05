@@ -37,24 +37,49 @@
                     </div>
                     <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
                         <div class="col-md-6 col-12 pr-0 my-1">
-                            <form class="searchBox" action="#">
-                                <input type="search" class="form-control w-100" placeholder="Cari sesuatu di sini">
+                            <form class="searchBox" action="caribuku.jsp" method="get">
+                                <input type="search" name="keyword" class="form-control w-100" placeholder="Cari sesuatu di sini">
                                 <button type="submit"><img src="assets/img/search.png" width="15px" style="padding-bottom: 5px;"></button>
                             </form>
                         </div>
-                        <div class="col-md-2 offset-md-1 col-12 pr-0 my-1">
-                            <a class="navbar-brand ml-5" href="daftarbeli.jsp"><img src="assets/img/shoppingcart.png" width="50px"></a>     
+                        <div class="col-md-3 col-12 pr-0 my-1">
+                            <a class="navbar-brand ml-5 pl-3" href="home.jsp"><img src="assets/img/bookadd.png" width="50px"></a>
+                            <a class="navbar-brand" href="daftarbeli.jsp"><img src="assets/img/shoppingcart.png" width="50px"></a>
+                            <%
+                                //HITUNG JUMLAH DATA DI KERANJANG
+                                try {
+                                    koneksi connect     = new koneksi();
+                                    Connection conn     = connect.bukaKoneksi();
+                                    Statement st        = conn.createStatement();
+                                    String sqlHitungBuku= "SELECT count(id) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
+                                    ResultSet rs        = st.executeQuery(sqlHitungBuku);
+
+                                    int flag = 0;
+                                    if(rs.next()) {
+                                        flag = 1;
+                                        out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>"+rs.getString(1)+"</span></div>");
+                                    }
+                                    
+                                    // JIKA DATA KOSONG
+                                    if(flag == 0) {
+                                        out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>0</span></div>");
+                                    }
+                                }
+                                catch(Exception e) {
+                                    
+                                }
+                            %>
                         </div>
-                        <div class="col-md-2  col-12 pr-0 my-1">
+                        <div class="col-md-2 col-12 pr-0 my-1">
                             <div class="navbar-brand dropdown ">
                                 <img src="assets/img/admin-user.png" width="50px"> 
                                 <a class="dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration: none;">
                                     <%= session.getAttribute("nama") %>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#" style="text-decoration: none;">Profil</a>
+                                    <a class="dropdown-item disabled" href="profil.jsp" style="text-decoration: none;">Profil</a>
                                     <a class="dropdown-item" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
-                                    <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Daftar Beli</a>
+                                    <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Keranjang</a>
                                     <hr>
                                     <form action="proseslogin.jsp" method="post">
                                         <input type="hidden" name="tombol" value="keluar">
@@ -92,28 +117,33 @@
                                 out.print("<div class='col-md-5'>"
                                             +"<div class='card'>"
                                                 +"<div class='card-header text-center'><h4 class='mb-0'>Informasi Profil</h4></div>"
-                                                +"<div class='card-body my-3'>"
+                                                +"<div class='card-body'>"
                                                     +"<table>"
                                                         +"<thead>"
                                                             +"<tr>"
                                                                 +"<th>NIM</th>"
-                                                                +"<td>&nbsp; &nbsp; &nbsp; : &nbsp; </td>"
-                                                                +"<td> "+rs.getString(1)+"</td>"
+                                                                +"<td class='pl-1'>:</td>"
+                                                                +"<td class='pl-3'> "+rs.getString(1)+"</td>"
                                                             +"</tr>"
                                                             +"<tr>"
                                                                 +"<th>Nama</th>"
-                                                                +"<td>&nbsp; &nbsp; &nbsp; : &nbsp; </td>"
-                                                                +"<td> "+rs.getString(2)+"</td>"
+                                                                +"<td class='pl-1'>:</td>"
+                                                                +"<td class='pl-3'> "+rs.getString(2)+"</td>"
                                                             +"</tr>"
                                                             +"<tr>"
-                                                                +"<th>Password</th>"
-                                                                +"<td> &nbsp; &nbsp; &nbsp; : &nbsp; </td>"
-                                                                +"<td> "+rs.getString(3)+"</td>"
+                                                                +"<th>Alamat</th>"
+                                                                +"<td class='pl-1'>:</td>"
+                                                                +"<td class='pl-3'> "+rs.getString(3)+"</td>"
+                                                            +"</tr>"
+                                                            +"<tr>"
+                                                                +"<th width='100px'>Kata Sandi</th>"
+                                                                +"<td class='pl-1'>:</td>"
+                                                                +"<td class='pl-3'> "+rs.getString(4)+"</td>"
                                                             +"</tr>"
                                                             +"<tr>"
                                                                 +"<th>Saldo</th>"
-                                                                +"<td>&nbsp; &nbsp; &nbsp; : &nbsp; </td>"
-                                                                +"<td> "+rs.getString(4)+"</td>"
+                                                                +"<td class='pl-1'>:</td>"
+                                                                +"<td class='pl-3'> Rp"+rs.getString(5)+",00</td>"
                                                             +"</tr>"
                                                         +"</thead>"
                                                     +"</table>"
@@ -134,7 +164,7 @@
                                                             +"</button>"
                                                         +"</div>"
                                                         +"<div class='modal-body'>"
-                                                            +"<form>"
+                                                            +"<form action='profil.jsp' method='post'>"
                                                                 +"<div class='form-group form-inline'>"
                                                                     + "<label class='col-md-4'>NIM</label>"
                                                                     + "<input class='form-control col-md-8' type='text' name='nim' value='"+rs.getString(1)+"' readonly>"
@@ -144,12 +174,16 @@
                                                                     + "<input class='form-control col-md-8' type='text' name='nama' value='"+rs.getString(2)+"' required>"
                                                                 + "</div>"
                                                                 +"<div class='form-group form-inline'>"
-                                                                    + "<label class='col-md-4'>Password</label>"
-                                                                    + "<input class='form-control col-md-8' type='text' name='password' value='"+rs.getString(3)+"' required>"
+                                                                    + "<label class='col-md-4'>Alamat</label>"
+                                                                    + "<textarea class='form-control col-md-8' type='text' name='alamat' required>"+rs.getString(3)+"</textarea>"
+                                                                + "</div>"
+                                                                +"<div class='form-group form-inline'>"
+                                                                    + "<label class='col-md-4'>Kata Sandi</label>"
+                                                                    + "<input class='form-control col-md-8' type='text' name='password' value='"+rs.getString(4)+"' required>"
                                                                 + "</div>"
                                                                 +"<hr>"
                                                                 +"<div class='form-group form-inline'>"
-                                                                     + "<button class='btn btn-success form-control col-md-8 offset-md-4'>Ubah</button>"
+                                                                     + "<button type='submit' name='tombol' value='ubah' class='btn btn-success form-control col-md-8 offset-md-4'>Ubah</button>"
                                                                 + "</div>"
                                                             + "</form>"
                                                         +"</div>"
@@ -177,7 +211,38 @@
         <div class=" text-center">
             <a class="text-primary" href="home.jsp">Kembali</a></div>
         </div>  -->
-        
+        <%
+            String cek      = request.getParameter("tombol");
+            
+            if(cek != null && cek.toString().equals("ubah")) {
+                String id       = request.getParameter("nim");
+                String nama     = request.getParameter("nama");
+                String alamat   = request.getParameter("alamat");
+                String password = request.getParameter("password");
+                
+                try {
+                    koneksi connect = new koneksi();
+                    Connection conn = connect.bukaKoneksi();
+                    Statement st    = conn.createStatement();
+                    String sql      = "UPDATE users SET nama='"+nama+"', alamat='"+alamat+"', password='"+password+"' WHERE nim="+id+"";
+                    st.executeUpdate(sql);
+                    conn.close();
+                    
+                    session.removeAttribute("nama");
+                    session.setAttribute("nama", nama);
+                    out.print(  "<script>"
+                                    + "window.alert('Data berhasil diubah.');"
+                                    +"window.location.href='http://localhost:8080/PenjualanBuku/profil.jsp';"
+                                +"</script>");
+                }
+                catch(Exception x) {
+                    out.print(  "<script>"
+                                    +"window.alert('Data gagal diubah.');"
+                                    +"window.location.href='http://localhost:8080/PenjualanBuku/profil.jsp';"
+                                +"</script>");
+                }
+            }
+        %>
         <script src="assets/js/jquery.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
     </body>

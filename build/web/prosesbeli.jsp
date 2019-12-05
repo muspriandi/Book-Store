@@ -31,7 +31,7 @@
                     st.executeUpdate(sql);
                     
                     out.print(  "<script>"
-                                    + "window.alert('Buku berhasil dimasukkan ke dalam daftar beli.');"
+                                    + "window.alert('Buku berhasil dimasukkan ke dalam keranjang.');"
                                     +"window.location.href='http://localhost:8080/PenjualanBuku/daftarbeli.jsp';"
                                 +"</script>");
                     
