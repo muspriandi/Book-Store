@@ -80,6 +80,7 @@
                                     <a class="dropdown-item disabled" href="profil.jsp" style="text-decoration: none;">Profil</a>
                                     <a class="dropdown-item" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
                                     <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Keranjang</a>
+                                    <a class="dropdown-item" href="pembayaran.jsp" style="text-decoration: none;">Pembayaran</a>
                                     <hr>
                                     <form action="proseslogin.jsp" method="post">
                                         <input type="hidden" name="tombol" value="keluar">
@@ -139,11 +140,6 @@
                                                                 +"<th width='100px'>Kata Sandi</th>"
                                                                 +"<td class='pl-1'>:</td>"
                                                                 +"<td class='pl-3'> "+rs.getString(4)+"</td>"
-                                                            +"</tr>"
-                                                            +"<tr>"
-                                                                +"<th>Saldo</th>"
-                                                                +"<td class='pl-1'>:</td>"
-                                                                +"<td class='pl-3'> Rp"+rs.getString(5)+",00</td>"
                                                             +"</tr>"
                                                         +"</thead>"
                                                     +"</table>"

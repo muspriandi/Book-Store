@@ -79,6 +79,7 @@
                                     <a class="dropdown-item" href="profil.jsp" style="text-decoration: none;">Profil</a>
                                     <a class="dropdown-item disabled" href="home.jsp" style="text-decoration: none;">Beli Buku</a>
                                     <a class="dropdown-item" href="daftarbeli.jsp" style="text-decoration: none;">Keranjang</a>
+                                    <a class="dropdown-item" href="pembayaran.jsp" style="text-decoration: none;">Pembayaran</a>
                                     <hr>
                                     <form action="proseslogin.jsp" method="post">
                                         <input type="hidden" name="tombol" value="keluar">
