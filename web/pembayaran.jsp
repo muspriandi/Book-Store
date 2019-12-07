@@ -51,13 +51,15 @@
                                     koneksi connect     = new koneksi();
                                     Connection conn     = connect.bukaKoneksi();
                                     Statement st        = conn.createStatement();
-                                    String sqlHitungBuku= "SELECT count(id) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
+                                    String sqlHitungBuku= "SELECT SUM(qty) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
                                     ResultSet rs        = st.executeQuery(sqlHitungBuku);
 
                                     int flag = 0;
                                     if(rs.next()) {
-                                        flag = 1;
-                                        out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>"+rs.getString(1)+"</span></div>");
+                                        if(rs.getString(1) != null) {
+                                            out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>"+rs.getString(1)+"</span></div>");
+                                            flag = 1;
+                                        }
                                     }
                                     
                                     // JIKA DATA KOSONG
@@ -113,7 +115,8 @@
                             Statement st        = conn.createStatement();
                             String sqlGetData   = "SELECT payment.*, users.nama FROM payment INNER JOIN users ON users.nim = payment.nim WHERE payment.nim='"+nim+"'";
                             ResultSet rs        = st.executeQuery(sqlGetData);
-
+                            int flag = 0;
+                            
                             while(rs.next()) {
                                 out.print("<div class='col-md-6 my-3'>"
                                             +"<div class='card'>"
@@ -139,11 +142,11 @@
                                                                     + "</div>"
                                                                 + "</td>"
                                                             +"</tr>"
-                                                            +"<tr>"
-                                                                +"<td width='175px' class='text-right pr-3'>NIM Penerima</td>"
-                                                                +"<td class='pl-1'>:</td>"
-                                                                +"<td class='pl-3'> "+rs.getString(6)+"</td>"
-                                                            +"</tr>"
+//                                                            +"<tr>"
+//                                                                +"<td width='175px' class='text-right pr-3'>NIM Penerima</td>"
+//                                                                +"<td class='pl-1'>:</td>"
+//                                                                +"<td class='pl-3'> "+rs.getString(6)+"</td>"
+//                                                            +"</tr>"
                                                             +"<tr>"
                                                                 +"<td width='175px' class='text-right pr-3'>Nama Penerima</td>"
                                                                 +"<td class='pl-1'>:</td>"
@@ -173,10 +176,21 @@
                                 }
                                 else
                                 {
-                                    out.print("<small class='text-center'>Silahkan melakukan pembayaran melalui cabang <strong>"+rs.getString(4)+"</strong> terdekat ke nomor rekening a.n. <strong>TEST</strong>");
+                                    out.print("<small class='text-center p-3'>Silahkan melakukan pembayaran melalui cabang <strong>"+rs.getString(4)+"</strong> terdekat ke nomor rekening a.n. <strong>TEST</strong></small>");
                                 }
                                 out.print(  "</div>"
                                         +"</div>");
+                                
+                                flag = 1;
+                            }
+                            
+                            if(flag == 0) {
+                                out.print("<div class='col-md-6 my-3'>"
+                                                +"<div class='card'>"
+                                                    + "<h5 class='text-info mt-5 text-center'>Data pembelian masih kosong.</h5>"
+                                                    + "<a class='text-info mb-5 text-center' href='home.jsp'>Beli buku sekarang!</a>"
+                                                + "</div>"
+                                            + "</div>");
                             }
                         }
                         catch(Exception e) {

@@ -84,13 +84,15 @@
                                     koneksi connect     = new koneksi();
                                     Connection conn     = connect.bukaKoneksi();
                                     Statement st        = conn.createStatement();
-                                    String sqlHitungBuku= "SELECT count(id) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
+                                    String sqlHitungBuku= "SELECT SUM(qty) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
                                     ResultSet rs        = st.executeQuery(sqlHitungBuku);
 
                                     int flag = 0;
                                     if(rs.next()) {
-                                        flag = 1;
-                                        out.print("<h5 class='text-center'>Total buku dalam keranjang : "+rs.getString(1)+"</h5>");
+                                        if(rs.getString(1) != null) {
+                                            out.print("<h5 class='text-center'>Total buku dalam keranjang : "+rs.getString(1)+"</h5>");
+                                            flag = 1;
+                                        }
                                     }
                                     
                                     // JIKA DATA KOSONG
@@ -109,11 +111,12 @@
                             <tr>
                                 <th width="2%">No</th>
                                 <th width="5%">ISBN</th>
-                                <th width="20%">Judul Buku</th>
-                                <th width="10%">Penerbit</th>
+                                <th width="15%">Judul Buku</th>
+                                <th width="15%">Penerbit</th>
                                 <th width="10%">Harga</th>
                                 <th width="10%">Qty</th>
                                 <th width="10%">Total</th>
+                                <th width="10%">Aksi</th>
                             </tr>
                         <tbody width="100%" class="w-100">
                         <%
@@ -140,14 +143,32 @@
                                         total       = Double.parseDouble(rs.getString(14)) * Double.parseDouble(rs2.getString(1));
                                         grandTotal  = grandTotal + total;
                                         
-                                        out.print("<tr data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"
-                                                    + "<td>"+i+"</td>"
-                                                    + "<td>"+rs.getString(1)+"</td>"
-                                                    + "<td>"+rs.getString(2)+"</td>"
-                                                    + "<td>"+rs.getString(3)+"</td>"
-                                                    + "<td>"+rs.getString(14)+"</td>"
-                                                    + "<td>"+rs2.getString(1)+"</td>"
+                                        out.print("<tr>"
+                                                    + "<td data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"+i+"</td>"
+                                                    + "<td data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"+rs.getString(1)+"</td>"
+                                                    + "<td data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"+rs.getString(2)+"</td>"
+                                                    + "<td data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"+rs.getString(3)+"</td>"
+                                                    + "<td data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"+rs.getString(14)+"</td>"
+                                                    + "<td>"+rs2.getString(1)
+                                                        +"<form action='proseskeranjang.jsp' method='post'>"
+                                                            + "<input type='hidden' name='isbn' value='"+rs.getString(1)+"'>"
+                                                            + "<input type='hidden' name='nim' value='"+nim+"'>"
+                                                            + "<div class='minusBuku'>"
+                                                                + "<button type='submit' name='tombol' value='minus' class='btn btn-success'><strong>-</strong></button>"
+                                                            + "</div>"
+                                                            + " <div class='plusBuku'>"
+                                                                + "<button type='submit' name='tombol' value='plus' class='btn btn-success'><strong>+</strong></button>"
+                                                            + "</div>"
+                                                        + "</form>"
+                                                    + "</td>"
                                                     + "<td class='text-left'><strong>Rp"+dec.format(total)+",00</strong></td>"
+                                                    + "<td>"
+                                                        + "<form action='proseskeranjang.jsp' method='post'>"
+                                                            + "<input type='hidden' name='isbn' value='"+rs.getString(1)+"'>"
+                                                            + "<input type='hidden' name='nim' value='"+nim+"'>"
+                                                            + "<button type='sumbit' name='tombol' value='hapus' class='btn btn-danger text-white w-100'>Hapus"
+                                                        + "</form>"
+                                                    + "</td>"
                                                 + "</tr>");
                                         
                                         out.print(" <div class='modal fade bd-example-modal-lg"+rs.getString(1)+"' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"
@@ -177,7 +198,7 @@
                                                                             +"</li>"
                                                                         +"</ul>"
                                                                         +"<div class='tab-content'>"
-                                                                            +"<div role='tabpanel' class='tab-pane fade in active show' id='desc"+rs.getString(1)+"' style='max-height: 300px; overflow: hidden;overflow-y: auto;'>"
+                                                                            +"<div role='tabpanel' class='tab-pane fade in active show mb-5' id='desc"+rs.getString(1)+"' style='max-height: 275px; overflow: hidden;overflow-y: auto;'>"
                                                                                 +"<p class='p-3'>"+rs.getString(4)+"</p>"
                                                                             +"</div>"
                                                                             +"<div role='tabpanel' class='tab-pane fade' id='detail"+rs.getString(1)+"'>"
@@ -212,7 +233,7 @@
                                 // JIKA DATA KOSONG
                                 if(i == 1) {
                                     out.print(  "<tr>"
-                                                    + "<td colspan='7' class='py-5'><h4>Keranjang masih kosong.</h4><a class='text-dark' href='home.jsp'>Beli buku sekarang!</a></td>"
+                                                    + "<td colspan='8' class='py-5'><h4>Keranjang masih kosong.</h4><a class='text-dark' href='home.jsp'>Beli buku sekarang!</a></td>"
                                                 + "</tr>");
                                 }
                                 else {
@@ -220,7 +241,9 @@
                                                 + "<td colspan='6' class='text-right'><strong>Total yang harus dibayar</strong></td>"
                                                 + "<td class='text-left'>"
                                                     + "<strong>Rp"+dec.format(grandTotal)+",00</strong>"
-                                                    + "<button class='btn btn-success w-100 mt-2' data-toggle='modal' data-target='.bd-example-modal-lg"+nim+"'>Bayar"
+                                                + "</td>"
+                                                + "<td>"
+                                                    + "<button class='btn btn-success w-100' data-toggle='modal' data-target='.bd-example-modal-lg"+nim+"'>Bayar"
                                                 + "</td>"
                                             + "</tr>");
                                     

@@ -50,13 +50,15 @@
                                     koneksi connect     = new koneksi();
                                     Connection conn     = connect.bukaKoneksi();
                                     Statement st        = conn.createStatement();
-                                    String sqlHitungBuku= "SELECT count(id) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
+                                    String sqlHitungBuku= "SELECT SUM(qty) FROM shopingcart WHERE nim ='"+session.getAttribute("nim")+"' AND status='belum lunas'";
                                     ResultSet rs        = st.executeQuery(sqlHitungBuku);
 
                                     int flag = 0;
                                     if(rs.next()) {
-                                        flag = 1;
-                                        out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>"+rs.getString(1)+"</span></div>");
+                                        if(rs.getString(1) != null) {
+                                            out.print("<div class='jumlahKeranjang bg-warning text-white' style='cursor: pointer;'><span style='position: relative; top: 0.5px; left: -0.5px;'>"+rs.getString(1)+"</span></div>");
+                                            flag = 1;
+                                        }
                                     }
                                     
                                     // JIKA DATA KOSONG

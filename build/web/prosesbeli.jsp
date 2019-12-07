@@ -27,34 +27,70 @@
                     koneksi connect = new koneksi();
                     Connection conn = connect.bukaKoneksi();
                     Statement st    = conn.createStatement();
-                    String sql      = "INSERT INTO shopingcart(isbn,nim,qty,harga) VALUES ('"+isbn+"','"+nim+"','"+qty+"','"+harga+"')";
-                    st.executeUpdate(sql);
-                    
-                    out.print(  "<script>"
-                                    + "window.alert('Buku berhasil dimasukkan ke dalam keranjang.');"
-                                    +"window.location.href='http://localhost:8080/PenjualanBuku/daftarbeli.jsp';"
-                                +"</script>");
                     
                     //SELECT STOK
-                    String sql2     = "SELECT stok FROM books  WHERE isbn = '"+isbn+"'";
-                    ResultSet rs    = st.executeQuery(sql2);
+                    String sql     = "SELECT stok FROM books  WHERE isbn = '"+isbn+"'";
+                    ResultSet rs    = st.executeQuery(sql);
                     
                     if(rs.next()) {
                         // UPDATE STOK BUKU
-                        int stok = Integer.parseInt(rs.getString(1)) - Integer.parseInt(qty);
+                        if(Integer.parseInt(qty) <= Integer.parseInt(rs.getString(1)))
+                        {
+                            int stok = Integer.parseInt(rs.getString(1)) - Integer.parseInt(qty);
                         
-                        String sql3      = "UPDATE books SET stok='"+stok+"' WHERE isbn = '"+isbn+"'";
-                        st.executeUpdate(sql3);
-                    }
-                    
+                            String sql2      = "UPDATE books SET stok='"+stok+"' WHERE isbn = '"+isbn+"'";
+                            st.executeUpdate(sql2);
+
+                            try {
+                                String sql3     = "SELECT qty FROM shopingcart WHERE isbn = '"+isbn+"' AND nim='"+nim+"' AND status='belum lunas'";
+                                ResultSet rs2    = st.executeQuery(sql3);
+                                
+                                int flag = 0;
+                                if(rs2.next()) {
+                                    flag = 1;
+                                    
+                                    int stokTambah = Integer.parseInt(rs2.getString(1)) + Integer.parseInt(qty);
+                                    String sql4      = "UPDATE shopingcart SET qty='"+stokTambah+"' WHERE isbn = '"+isbn+"' AND nim='"+nim+"'";
+                                    st.executeUpdate(sql4);
+
+                                    out.print(  "<script>"
+                                                    + "window.alert('Buku berhasil dimasukkan ke dalam keranjang.');"
+                                                    +"window.location.href='http://localhost:8080/PenjualanBuku/daftarbeli.jsp';"
+                                                +"</script>"); 
+                                }
+                                if(flag == 0) {
+                                    String sql5      = "INSERT INTO shopingcart(isbn,nim,qty,harga,status) VALUES ('"+isbn+"','"+nim+"','"+qty+"','"+harga+"','belum lunas')";
+                                    st.executeUpdate(sql5);
+
+                                    out.print(  "<script>"
+                                                    + "window.alert('Buku berhasil dimasukkan ke dalam keranjang.');"
+                                                    +"window.location.href='http://localhost:8080/PenjualanBuku/daftarbeli.jsp';"
+                                                +"</script>");   
+                                }
+                            }
+                            catch(Exception e) {
+                                out.print(  "<script>"
+                                                +"window.alert('Buku tidak dapat dibeli.');"
+                                                +"window.location.href='http://localhost:8080/PenjualanBuku/home.jsp';"
+                                            +"</script>");
+                            }
+                        }
+                        else
+                        {
+                            out.print(  "<script>"
+                                            + "window.alert('Qty melebihi stok yang tersedia. Buku gagal dimasukan ke dalam keranjang');"
+                                            +"window.location.href='http://localhost:8080/PenjualanBuku/daftarbeli.jsp';"
+                                        +"</script>");
+                        }
                     conn.close();
                 }
-                catch(Exception x) {
-                    out.print(  "<script>"
-                                    +"window.alert('Buku tidak dapat dibeli.');"
-                                    +"window.location.href='http://localhost:8080/PenjualanBuku/home.jsp';"
-                                +"</script>");
-                }
+            }
+            catch(Exception x) {
+                out.print(  "<script>"
+                                +"window.alert('Buku tidak dapat dibeli.');"
+                                +"window.location.href='http://localhost:8080/PenjualanBuku/home.jsp';"
+                            +"</script>");
+            }
         %>
     </body>
 </html>

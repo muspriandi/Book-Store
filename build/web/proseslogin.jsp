@@ -63,7 +63,7 @@
                 catch(Exception x) {
                     out.print(  "<script>"
                                     + "window.alert('NIM atau Password salah.');"
-                                    +"window.location.href='http://localhost:8080/PeminjamanBuku/login.jsp';"
+                                    +"window.location.href='http://localhost:8080/PenjualanBuku/login.jsp';"
                                 +"</script>");
                 }
             }
