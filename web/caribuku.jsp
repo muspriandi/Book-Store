@@ -159,7 +159,7 @@
                 <div class="col-md-12">
                     <div class="hr-sect">
                         <span>
-                            <h3 class="text-dark m-0 px-3">Hasil Pencarian :</h3>
+                            <h3 class="text-dark m-0 px-3 text-center">Hasil Pencarian :</h3>
                             <h5 class="text-center">Kata Kunci : '<%= kata %>'</h5>
                         </span>
                     </div>
@@ -172,8 +172,10 @@
                         Statement st        = conn.createStatement();
                         String sqlGetBuku   = "SELECT * FROM books WHERE judul LIKE '%"+kata+"%' OR penulis LIKE '%"+kata+"' OR penerbit LIKE '%"+kata+"%'";
                         ResultSet rs        = st.executeQuery(sqlGetBuku);
+                        int flag = 0;
 
                         while(rs.next()) {
+                            flag = 1;
                             out.print("<div class='col-md-2 mb-4' data-toggle='modal' data-target='.bd-example-modal-lg"+rs.getString(1)+"' style='cursor: pointer;'>"
                                             + "<img class='d-block rounded' src='assets/img/"+rs.getString(7)+"' width='100%' height='225px'>"
                                         +"</div>");
@@ -447,6 +449,15 @@
                                 }
                             }
                         }
+                        
+                        if(flag == 0) {
+                            out.print("<div class='col-md-6 my-3'>"
+                                                +"<div class='card'>"
+                                                    + "<h5 class='text-info mt-5 text-center'>Buku tidak ditemukan.</h5>"
+                                                    + "<a class='text-info mb-5 text-center' href='home.jsp'>Silahkan cari dengan kata kunci lain!</a>"
+                                                + "</div>"
+                                            + "</div>");
+                        } 
                     }
                     catch(Exception e) {
                     }
