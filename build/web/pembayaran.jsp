@@ -31,7 +31,7 @@
                 <div class="row w-100 text-center">
                     <div class="col-md-4 col-12 pr-0 my-1">
                         <a class="navbar-brand" href="home.jsp">
-                        <img src="assets/img/logo.png" alt="logo" width="50px"> <strong>Perpustakaan Daring</strong></a>
+                        <img src="assets/img/logo.png" alt="logo" width="50px"> <strong>Ar-Rahman Store</strong></a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                     </div>
@@ -167,6 +167,11 @@
                                                                 +"<td class='pl-1'>:</td>"
                                                                 +"<td class='pl-3'> "+rs.getString(4)+"</td>"
                                                             +"</tr>"
+                                                            +"<tr>"
+                                                                +"<td width='175px' class='text-right pr-3'>Biaya Pengiriman</td>"
+                                                                +"<td class='pl-1'>:</td>"
+                                                                +"<td class='pl-3'> Gratis</td>"
+                                                            +"</tr>"
                                                         +"</thead>"
                                                     +"</table>"
                                                 +"</div>");
@@ -176,7 +181,7 @@
                                 }
                                 else
                                 {
-                                    out.print("<small class='text-center p-3'>Silahkan melakukan pembayaran melalui cabang <strong>"+rs.getString(4)+"</strong> terdekat ke nomor rekening a.n. <strong>TEST</strong></small>");
+                                    out.print("<small class='text-center p-3'>Silahkan melakukan pembayaran melalui cabang <strong>"+rs.getString(4)+"</strong> terdekat ke nomor rekening a.n. <strong>Ar-Rahman Store</strong></small>");
                                 }
                                 out.print(  "</div>"
                                         +"</div>");

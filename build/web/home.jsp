@@ -31,7 +31,7 @@
                 <div class="row w-100 text-center">
                     <div class="col-md-4 col-12 pr-0 my-1">
                         <a class="navbar-brand" href="home.jsp">
-                        <img src="assets/img/logo.png" alt="logo" width="50px"> <strong>Perpustakaan Daring</strong></a>
+                        <img src="assets/img/logo.png" alt="logo" width="50px"> <strong>Ar-Rahman Store</strong></a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                     </div>
